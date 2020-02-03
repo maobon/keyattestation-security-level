@@ -157,7 +157,7 @@ public class KeyAttestationUtil {
         if ((tmpLength & 0x80) == 0) {
             return tmpLength;
         } else {
-            int lengthLength = (int) (tmpLength & 0x7f);
+            int lengthLength = tmpLength & 0x7f;
             if (lengthLength > 4) {
                 // extension der will not be large than 65535
                 return -1;

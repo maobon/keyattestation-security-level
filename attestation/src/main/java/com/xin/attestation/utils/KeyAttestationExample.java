@@ -129,7 +129,7 @@ public class KeyAttestationExample {
         return verifyCertificateChainResult;
     }
 
-    private static ASN1Sequence extractAttestationSequence(X509Certificate attestationCert) throws Exception, IOException {
+    private static ASN1Sequence extractAttestationSequence(X509Certificate attestationCert) throws Exception {
         byte[] attestationExtensionBytes = attestationCert.getExtensionValue(KEY_DESCRIPTION_OID);
         if (attestationExtensionBytes == null || attestationExtensionBytes.length == 0) {
             throw new Exception("Couldn't find the keystore attestation " + "extension data.");
@@ -159,7 +159,7 @@ public class KeyAttestationExample {
         return null;
     }
 
-    private static boolean verifyCertificateChain(X509Certificate[] certs) throws CertificateExpiredException, CertificateNotYetValidException,
+    private static boolean verifyCertificateChain(X509Certificate[] certs) throws
             CertificateException, NoSuchAlgorithmException, InvalidKeyException, NoSuchProviderException, SignatureException {
 
         for (int i = 1; i < certs.length; ++i) {
