@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="15dp"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/btn_generate_keypair_ecc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Generate Keypair ECC"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_generate_keypair_rsa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Generate Keypair RSA"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_get_keystore_security_level"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Get KeyStore Security Level"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_verify_android_key_attestation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Verify Android Attestation"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_list_key_alias"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text="KeyStore List Alias"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_import_private_key"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="KeyStore Import Private Key"
+        android:textAllCaps="false" />
+
+</LinearLayout>
