@@ -84,6 +84,7 @@ public class KeyAttestationUtil {
                 description.setKeymasterVersion(keymasterVersionValue[0] & 0xff);
             }
 
+            // -------------- keymaster 的安全等级 att认证器需要 keymaster安全等级必须为TEE ------------
             // verify keymaster security
             byte keymasterSecurityTag = bufStream.get();
             int keymasterSecurityLength = getASN1Length(bufStream);
@@ -94,6 +95,7 @@ public class KeyAttestationUtil {
                 return null;
             }
             description.setKeymasterSecurityLevel(keymasterSecurityValue[0] & 0xff);
+            // --------------
 
             // verify challenge
             byte challengeTag = bufStream.get();
