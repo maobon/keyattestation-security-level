@@ -1,6 +1,5 @@
 package com.xin.attestation;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.security.keystore.KeyGenParameterSpec;
@@ -122,7 +121,10 @@ public class AttestationSdk {
                 os.write(buffer, 0, len);
             }
 
-            byte[] priBytes = Base64.decode(os.toByteArray(), Base64.DEFAULT);
+            String xx = new String(os.toByteArray()).replace("-----BEGIN PRIVATE KEY-----", "")
+                    .replace("-----END PRIVATE KEY-----", "");
+
+            byte[] priBytes = Base64.decode(xx.getBytes(), Base64.DEFAULT);
 
             final PrivateKey privateKey = KeyFactory.getInstance("RSA")
                     .generatePrivate(new PKCS8EncodedKeySpec(priBytes));
