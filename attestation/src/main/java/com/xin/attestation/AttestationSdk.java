@@ -13,15 +13,18 @@ import com.xin.attestation.utils.KeyAttestationExample;
 import com.xin.attestation.utils.KeyAttestationUtil;
 import com.xin.attestation.utils.KeyDescription;
 
+import java.io.ByteArrayInputStream;
 import java.math.BigInteger;
 import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Signature;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.spec.ECGenParameterSpec;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -34,6 +37,7 @@ import javax.security.auth.x500.X500Principal;
 
 public class AttestationSdk {
 
+    // 私钥
     private static final String RSA_PRI_KEY =
             "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDEMBB24ccG2b9k" +
                     "v7bI3u/LTHaI9frrJ4KLjQ0kA6MipzwofvE1d79zeZVdS+oMahsygDFpUN6Nij94" +
@@ -190,9 +194,9 @@ public class AttestationSdk {
         try {
             Signature signature = Signature.getInstance("SHA256withRSA");
 
-            // local pri key sign
+            // 用私钥对数据进行签名
             final PrivateKey privateKey = KeyFactory.getInstance("RSA")
-                    .generatePrivate(new PKCS8EncodedKeySpec(Base64.decode(RSA_PRI_KEY_HUHU, Base64.DEFAULT)));
+                    .generatePrivate(new PKCS8EncodedKeySpec(Base64.decode(RSA_PRI_KEY, Base64.DEFAULT)));
 
             signature.initSign(privateKey);
             signature.update(dataToBeSigned.getBytes());
@@ -211,39 +215,42 @@ public class AttestationSdk {
             boolean verify1 = signature.verify(signRet);*/
 
             // 字符串证书转化为证书
-            /*Certificate cert = CertificateFactory.getInstance("X.509")
-                    .generateCertificate(new ByteArrayInputStream(Base64.decode(RSA_CERT, Base64.DEFAULT)));*/
+            Certificate cert = CertificateFactory.getInstance("X.509")
+                    .generateCertificate(new ByteArrayInputStream(Base64.decode(RSA_CERT, Base64.DEFAULT)));
 
             KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
             keyStore.load(null);
 
-            Certificate[] certChain = keyStore.getCertificateChain(keyAlias); // 导出一条证书链 里面公钥不对应导入私钥
+            //Certificate[] certChain = keyStore.getCertificateChain(keyAlias); // 导出一条证书链 里面公钥不对应导入私钥
+
 
             // *** 私钥 导入 ***
             // priKey and cert chain
             keyStore.setEntry(
                     keyAlias,
-                    new KeyStore.PrivateKeyEntry(privateKey, certChain), // 导入的证书不强制要求与该私钥对应 不对应也可以
+                    new KeyStore.PrivateKeyEntry(privateKey, new Certificate[]{cert}), // 导入的证书不强制要求与该私钥对应 不对应也可以
                     null
             );
 
             // 私钥
             // 可以用于签名加密等 但是android ks私钥不能被导出
-            Key key = keyStore.getKey(keyAlias, null);
+            //Key key = keyStore.getKey(keyAlias, null);
 
             // priKey from ks signRet
-            signature.initSign((PrivateKey) key);
+            /*signature.initSign((PrivateKey) key);
             signature.update(dataToBeSigned.getBytes());
             byte[] sig = signature.sign();
-            Log.wtf(TAG, "get priKey from ks and signRet result = " + bytesToHexStr(sig));
+            Log.wtf(TAG, "get priKey from ks and signRet result = " + bytesToHexStr(sig));*/
 
-            // 公钥来自导入证书
-            // PublicKey publicKey = keyStore.getCertificate(keyAlias).getPublicKey();
+            // 公钥来自导入证书 从keystore中取出
+            // 用公钥对被签名数据验签
+            Certificate certificate = keyStore.getCertificate(keyAlias);
+            PublicKey publicKey = certificate.getPublicKey();
 
-            /*signature.initVerify(publicKey);
+            signature.initVerify(publicKey);
             signature.update(dataToBeSigned.getBytes());
             boolean verify = signature.verify(signRet);
-            Log.wtf(TAG, "verify sig ret = " + verify);*/
+            Log.wtf(TAG, "verify sig ret = " + verify);
 
         } catch (Exception e) {
             e.printStackTrace();
