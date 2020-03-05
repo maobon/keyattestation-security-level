@@ -36,6 +36,9 @@ public class AttestationSdk {
 
     private static final String KEY_DESCRIPTION_OID = "1.3.6.1.4.1.11129.2.1.17";
 
+    /**
+     * Generate KeyPair - ECC
+     */
     public static boolean generateKeyPair(String keyAlias, Context context) {
         //Calendar notBefore = Calendar.getInstance();
         //Calendar notAfter = Calendar.getInstance();
@@ -69,6 +72,9 @@ public class AttestationSdk {
         return true;
     }
 
+    /**
+     * Generate KeyPair - RSA
+     */
     public static boolean generateKsRsaKeyPair(String keyUUID) {
 
         try {
@@ -97,7 +103,9 @@ public class AttestationSdk {
 
     }
 
-    // 做证书导入操作
+    /**
+     * Android KeyStore 证书导入操作
+     */
     public static void importDeviceCertificate(Context context, String keyAlias) {
 
         final String dataToBeSigned = "dataToBeSigneddataToBeSigneddataToBeSigneddataToBeSigneddataToBeSigned";
@@ -192,7 +200,9 @@ public class AttestationSdk {
         }
     }
 
-    // 列出keystore中所有秘钥的别名
+    /**
+     * 列出keystore中所有秘钥的别名
+     */
     public static List<String> listKeyStoreAllKeyAlias() {
         List<String> list = new ArrayList<>();
         try {
@@ -210,6 +220,9 @@ public class AttestationSdk {
         return list;
     }
 
+    /**
+     * 安全等级查看
+     */
     public static void getKeyStoreSecurityLevel(String keyAlias) {
         try {
             KeyStore ks = KeyStore.getInstance("AndroidKeyStore");
@@ -232,6 +245,9 @@ public class AttestationSdk {
         }
     }
 
+    /**
+     * 证书链校验
+     */
     public static boolean keyAttestationVerify(String keyAlias) {
         boolean result = false;
         try {
@@ -253,7 +269,6 @@ public class AttestationSdk {
         return result;
     }
 
-
     /**
      * 挑战值
      */
@@ -264,7 +279,6 @@ public class AttestationSdk {
         return challenge;
     }
 
-    //
     private static String bytesToHexStr(byte[] paramArrayOfByte) {
         if (paramArrayOfByte == null) {
             return null;
@@ -294,7 +308,6 @@ public class AttestationSdk {
         }
         return ret;
     }
-
 
     // 私钥
     private static final String RSA_PRI_KEY =
