@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.security.KeyFactory;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
+import java.security.Principal;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
@@ -270,13 +271,44 @@ public class AttestationSdk {
     }
 
     /**
-     * 挑战值
+     * 生成挑战值
      */
     private static byte[] genChallenge() {
         SecureRandom random = new SecureRandom();
         byte[] challenge = new byte[32];
         random.nextBytes(challenge);
         return challenge;
+    }
+
+    public static void pfxParser(Context context) throws Exception {
+        InputStream is = context.getResources().openRawResource(R.raw.www_gmrz_com);
+
+        KeyStore p12 = KeyStore.getInstance("pkcs12");
+        p12.load(is, "gmrz43210000".toCharArray());
+
+        Enumeration<String> e = p12.aliases();
+        while (e.hasMoreElements()) {
+            String alias = e.nextElement();
+            X509Certificate c = (X509Certificate) p12.getCertificate(alias); // x509
+
+            c.checkValidity();
+
+            PublicKey publicKey = c.getPublicKey();
+            byte[] tbsCertificate = c.getTBSCertificate();
+
+            Principal subject = c.getSubjectDN();
+
+            String subjectArray[] = subject.toString().split(",");
+
+            for (String s : subjectArray) {
+                String[] str = s.trim().split("=");
+
+                String key = str[0];
+                String value = str[1];
+
+                System.out.println(key + " - " + value);
+            }
+        }
     }
 
     private static String bytesToHexStr(byte[] paramArrayOfByte) {
