@@ -15,7 +15,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TAG = "MainActivity";
 
     private String keyAlias;
-    public static final String KEY_DESCRIPTION_OID = "1.3.6.1.4.1.11129.2.1.17";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,19 +39,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_generate_keypair_ecc:
-                UUID uuid = UUID.randomUUID();
-                this.keyAlias = uuid.toString();
-                boolean result = AttestationSdk.generateKeyPair(this.keyAlias, this);
-                Log.wtf(TAG, "generate keypair result= " + result);
+                keyAlias = UUID.randomUUID().toString();
+                boolean result = AttestationSdk.generateKeyPair(keyAlias, this);
+                Log.wtf(TAG, "generate ECC keypair result= " + result);
                 break;
 
             case R.id.btn_generate_keypair_rsa:
-                UUID uuid2 = UUID.randomUUID();
-                this.keyAlias = uuid2.toString();
-
-                boolean result2 = AttestationSdk.generateKsRsaKeyPair("GMRZ-TEST", this);
-                Log.wtf(TAG, "generate keypair result= " + result2);
-
+                keyAlias = UUID.randomUUID().toString();
+                boolean result2 = AttestationSdk.generateKsRsaKeyPair(keyAlias);
+                Log.wtf(TAG, "generate RSA keypair result= " + result2);
                 break;
 
             case R.id.btn_get_keystore_security_level:
@@ -71,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.btn_import_private_key:
-                AttestationSdk.importDeviceCertificate("GMRZ-TEST");
+                AttestationSdk.importDeviceCertificate(this, "TEST_IMPORT");
                 break;
         }
     }
